@@ -29,6 +29,14 @@ import {
 
 type LogActionFn = (action: string, targetCol: string, targetId: string) => Promise<void>;
 
+const formatTimestamp = (ts: any): string => {
+  if (!ts) return "";
+  if (typeof ts.toDate === "function") return ts.toDate().toLocaleString();
+  if (typeof ts.seconds === "number") return new Date(ts.seconds * 1000).toLocaleString();
+  if (ts instanceof Date) return ts.toLocaleString();
+  return new Date(ts).toLocaleString();
+};
+
 const uploadToImgbb = async (file: File, onProgress: (progress: number) => void): Promise<string> => {
   const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
   if (!apiKey) {
@@ -462,7 +470,7 @@ function DashboardHomeTab({ events, announcements, team, gallery, logs }: Dashbo
                   <p className="text-slate-400 text-[10px]">{log.adminEmail}</p>
                 </div>
                 <span className="text-slate-400 shrink-0 font-medium">
-                  {log.timestamp ? new Date(log.timestamp.seconds * 1000).toLocaleString() : ""}
+                  {formatTimestamp(log.timestamp)}
                 </span>
               </div>
             ))}
@@ -1977,7 +1985,7 @@ function ActivityLogsTab({ logs }: { logs: ActivityLog[] }) {
                   {logs.map((log) => (
                     <tr key={log.id} className="border-b border-slate-100/50 hover:bg-slate-50/50">
                       <td className="py-3.5 px-4 font-sans text-slate-400">
-                        {log.timestamp ? new Date(log.timestamp.seconds * 1000).toLocaleString() : ""}
+                        {formatTimestamp(log.timestamp)}
                       </td>
                       <td className="py-3.5 px-4 text-slate-700">{log.adminEmail}</td>
                       <td className="py-3.5 px-4 text-slate-800 font-bold">{log.action}</td>
