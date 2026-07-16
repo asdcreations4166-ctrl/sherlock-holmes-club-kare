@@ -29,11 +29,12 @@ import {
 
 type LogActionFn = (action: string, targetCol: string, targetId: string) => Promise<void>;
 
-const formatTimestamp = (ts: { seconds?: number; toDate?: () => Date } | Date | null | undefined): string => {
+const formatTimestamp = (ts: unknown): string => {
   if (!ts) return "";
-  if (typeof ts.toDate === "function") return ts.toDate().toLocaleString();
-  if (typeof ts.seconds === "number") return new Date(ts.seconds * 1000).toLocaleString();
-  if (ts instanceof Date) return ts.toLocaleString();
+  const t = ts as any;
+  if (typeof t.toDate === "function") return t.toDate().toLocaleString();
+  if (typeof t.seconds === "number") return new Date(t.seconds * 1000).toLocaleString();
+  if (t instanceof Date) return t.toLocaleString();
   return "";
 };
 
