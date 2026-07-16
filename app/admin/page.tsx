@@ -29,12 +29,12 @@ import {
 
 type LogActionFn = (action: string, targetCol: string, targetId: string) => Promise<void>;
 
-const formatTimestamp = (ts: any): string => {
+const formatTimestamp = (ts: { seconds?: number; toDate?: () => Date } | Date | null | undefined): string => {
   if (!ts) return "";
   if (typeof ts.toDate === "function") return ts.toDate().toLocaleString();
   if (typeof ts.seconds === "number") return new Date(ts.seconds * 1000).toLocaleString();
   if (ts instanceof Date) return ts.toLocaleString();
-  return new Date(ts).toLocaleString();
+  return "";
 };
 
 const uploadToImgbb = async (file: File, onProgress: (progress: number) => void): Promise<string> => {
