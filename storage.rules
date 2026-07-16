@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user is admin in Firestore
+    function isAdmin() {
+      return isAuthenticated() && 
+        firestore.exists(/databases/(default)/documents/adminUsers/$(request.auth.uid));
+    }
+
+    // Public read-only folders for club assets, only editable by admins
+    match /logos/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+    match /hero-images/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+    match /event-posters/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+    match /gallery/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+    match /documents/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+    match /downloads/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+    match /team/{allPaths=**} {
+      allow read: true;
+      allow write: if isAdmin();
+    }
+  }
+}

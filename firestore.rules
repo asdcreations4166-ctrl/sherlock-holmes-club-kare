@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the user is an admin in the adminUsers collection
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid));
+    }
+
+    // Public collections - Read-only for everyone, Write-only for admins
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /homepage/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /about/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /events/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /announcements/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /officeBearers/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /gallery/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /downloads/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /contact/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /websiteStatistics/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Contact messages - Create-only for public, Read/Write for admins
+    match /contactMessages/{document} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Admin Users - Read/Write by admins or the admin user themselves
+    match /adminUsers/{uid} {
+      allow read, write: if isAuthenticated() && (request.auth.uid == uid || isAdmin());
+    }
+
+    // Activity Logs - Read/Write by admins only
+    match /activityLogs/{document} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
