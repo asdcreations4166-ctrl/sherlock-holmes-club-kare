@@ -230,7 +230,7 @@ export default function AdminDashboardPage() {
 
     const unsubAdmins = onSnapshot(collection(db, "adminUsers"), (snap) => {
       const items: AdminUser[] = [];
-      snap.forEach((d) => items.push({ id: d.id, ...d.data() } as AdminUser));
+      snap.forEach((d) => items.push({ uid: d.id, ...d.data() } as AdminUser));
       setAdmins(items);
     });
 
