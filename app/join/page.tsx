@@ -111,14 +111,14 @@ export default function JoinClubPage() {
             {loading ? (
               <Skeleton className="h-12 w-48 rounded-xl bg-secondary" />
             ) : isOpen && settings?.registrationLink ? (
-              <Button
-                className="mt-4 px-8 py-5 rounded-xl font-bold uppercase tracking-wider text-xs shadow-xs bg-primary text-primary-foreground hover:bg-primary/95"
-                asChild
+              <a
+                href={settings.registrationLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 px-8 py-3 rounded-xl font-bold uppercase tracking-wider text-xs shadow-xs bg-primary text-primary-foreground hover:bg-primary/95 inline-flex items-center justify-center transition-all"
               >
-                <a href={settings.registrationLink} target="_blank" rel="noopener noreferrer">
-                  Apply Online
-                </a>
-              </Button>
+                Apply Online
+              </a>
             ) : (
               <Button
                 className="mt-4 px-8 py-5 rounded-xl font-bold uppercase tracking-wider text-xs shadow-xs"

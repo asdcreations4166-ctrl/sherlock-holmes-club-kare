@@ -264,14 +264,14 @@ export default function EventDetailsPage({ params }: EventDetailsProps) {
 
                 {/* Registration Button */}
                 {event.registrationOpen && event.registrationLink ? (
-                  <Button
-                    className="w-full py-6 rounded-2xl font-bold uppercase tracking-wider text-xs shadow-xs active:scale-[0.98] transition-transform bg-primary text-primary-foreground hover:bg-primary/95"
-                    asChild
+                  <a
+                    href={event.registrationLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3.5 rounded-2xl font-bold uppercase tracking-wider text-xs shadow-xs active:scale-[0.98] transition-transform bg-primary text-primary-foreground hover:bg-primary/95 inline-flex items-center justify-center text-center"
                   >
-                    <a href={event.registrationLink} target="_blank" rel="noopener noreferrer">
-                      Register Now
-                    </a>
-                  </Button>
+                    Register Now
+                  </a>
                 ) : (
                   <Button
                     className="w-full py-6 rounded-2xl font-bold uppercase tracking-wider text-xs shadow-xs"

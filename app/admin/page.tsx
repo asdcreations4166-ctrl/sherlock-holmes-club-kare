@@ -2201,9 +2201,14 @@ function DownloadsTab({ logAction }: { logAction: LogActionFn }) {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-bold">
-                      <a href={item.fileUrl} target="_blank" rel="noopener noreferrer">View</a>
-                    </Button>
+                    <a
+                      href={item.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex shrink-0 items-center justify-center rounded-xl border border-border bg-background hover:bg-muted hover:text-foreground text-xs font-bold h-7 px-2.5 transition-colors"
+                    >
+                      View
+                    </a>
                     <Button onClick={() => handleDelete(item.id, item.title)} size="sm" variant="ghost" className="rounded-xl text-rose-500 font-semibold hover:bg-rose-50">
                       Delete
                     </Button>
