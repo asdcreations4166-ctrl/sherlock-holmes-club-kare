@@ -49,6 +49,8 @@ export const metadata: Metadata = {
     title: "Sherlock Holmes Club | KARE",
     description:
       "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Promoting logical analysis, mystery-solving, and critical thinking.",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
   },
 };
 
