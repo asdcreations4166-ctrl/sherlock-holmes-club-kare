@@ -104,7 +104,7 @@ export interface AdminUser {
   uid: string;
   email: string;
   displayName?: string;
-  role: "admin" | "superadmin" | "editor";
+  role: "admin" | "superadmin" | "editor" | "mediateam";
   createdAt: Timestamp | FieldValue | Date;
 }
 
