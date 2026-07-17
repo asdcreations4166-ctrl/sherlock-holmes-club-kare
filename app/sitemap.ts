@@ -2,7 +2,9 @@ import { MetadataRoute } from "next";
 import { getEvents } from "@/services/clubService";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://sherlockholmesclub.kare.edu.in";
+  const baseUrl = process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : "https://sherlockholmesclub.kare.edu.in";
   
   const staticRoutes = ["", "/about", "/events", "/team", "/gallery", "/announcements", "/contact", "/join", "/developer-team"].map((route) => ({
     url: `${baseUrl}${route}`,
