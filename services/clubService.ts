@@ -27,6 +27,29 @@ import {
 } from "@/types";
 
 // ==========================================
+// Caching Helpers for SWR Pattern
+// ==========================================
+const getCachedData = <T>(key: string): T | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const cached = localStorage.getItem(`sh_club_cache_${key}`);
+    return cached ? JSON.parse(cached) : null;
+  } catch (e) {
+    console.warn("Failed to retrieve from localStorage cache:", e);
+    return null;
+  }
+};
+
+const setCachedData = <T>(key: string, data: T): void => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(`sh_club_cache_${key}`, JSON.stringify(data));
+  } catch (e) {
+    console.warn("Failed to store in localStorage cache:", e);
+  }
+};
+
+// ==========================================
 // Generic CRUD Helpers for Admin Portal
 // ==========================================
 
@@ -67,10 +90,15 @@ export async function getHomepageData(): Promise<HomepageData | null> {
 }
 
 export function subscribeHomepageData(callback: (data: HomepageData | null) => void) {
+  const cached = getCachedData<HomepageData>("homepage");
+  if (cached) callback(cached);
+
   const docRef = doc(db, "homepage", "main");
   return onSnapshot(docRef, (docSnap) => {
     if (docSnap.exists()) {
-      callback(docSnap.data() as HomepageData);
+      const data = docSnap.data() as HomepageData;
+      setCachedData("homepage", data);
+      callback(data);
     } else {
       callback(null);
     }
@@ -91,10 +119,15 @@ export async function getAboutData(): Promise<AboutData | null> {
 }
 
 export function subscribeAboutData(callback: (data: AboutData | null) => void) {
+  const cached = getCachedData<AboutData>("about");
+  if (cached) callback(cached);
+
   const docRef = doc(db, "about", "main");
   return onSnapshot(docRef, (docSnap) => {
     if (docSnap.exists()) {
-      callback(docSnap.data() as AboutData);
+      const data = docSnap.data() as AboutData;
+      setCachedData("about", data);
+      callback(data);
     } else {
       callback(null);
     }
@@ -141,6 +174,9 @@ export async function getEventById(id: string): Promise<ClubEvent | null> {
 }
 
 export function subscribeEvents(callback: (data: ClubEvent[]) => void) {
+  const cached = getCachedData<ClubEvent[]>("events");
+  if (cached) callback(cached);
+
   const colRef = collection(db, "events");
   const q = query(colRef, orderBy("date", "desc"));
   return onSnapshot(q, (querySnapshot) => {
@@ -148,6 +184,7 @@ export function subscribeEvents(callback: (data: ClubEvent[]) => void) {
     querySnapshot.forEach((doc) => {
       events.push({ id: doc.id, ...doc.data() } as ClubEvent);
     });
+    setCachedData("events", events);
     callback(events);
   });
 }
@@ -168,6 +205,9 @@ export async function getAnnouncements(): Promise<Announcement[]> {
 }
 
 export function subscribeAnnouncements(callback: (data: Announcement[]) => void) {
+  const cached = getCachedData<Announcement[]>("announcements");
+  if (cached) callback(cached);
+
   const colRef = collection(db, "announcements");
   const q = query(colRef, orderBy("date", "desc"));
   return onSnapshot(q, (querySnapshot) => {
@@ -175,6 +215,7 @@ export function subscribeAnnouncements(callback: (data: Announcement[]) => void)
     querySnapshot.forEach((doc) => {
       announcements.push({ id: doc.id, ...doc.data() } as Announcement);
     });
+    setCachedData("announcements", announcements);
     callback(announcements);
   });
 }
@@ -195,6 +236,9 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 }
 
 export function subscribeTeamMembers(callback: (data: TeamMember[]) => void) {
+  const cached = getCachedData<TeamMember[]>("team");
+  if (cached) callback(cached);
+
   const colRef = collection(db, "officeBearers");
   const q = query(colRef, orderBy("priorityOrder", "asc"));
   return onSnapshot(q, (querySnapshot) => {
@@ -202,6 +246,7 @@ export function subscribeTeamMembers(callback: (data: TeamMember[]) => void) {
     querySnapshot.forEach((doc) => {
       members.push({ id: doc.id, ...doc.data() } as TeamMember);
     });
+    setCachedData("team", members);
     callback(members);
   });
 }
@@ -222,6 +267,9 @@ export async function getGalleryImages(): Promise<GalleryItem[]> {
 }
 
 export function subscribeGalleryImages(callback: (data: GalleryItem[]) => void) {
+  const cached = getCachedData<GalleryItem[]>("gallery");
+  if (cached) callback(cached);
+
   const colRef = collection(db, "gallery");
   const q = query(colRef, orderBy("date", "desc"));
   return onSnapshot(q, (querySnapshot) => {
@@ -229,6 +277,7 @@ export function subscribeGalleryImages(callback: (data: GalleryItem[]) => void) 
     querySnapshot.forEach((doc) => {
       items.push({ id: doc.id, ...doc.data() } as GalleryItem);
     });
+    setCachedData("gallery", items);
     callback(items);
   });
 }
@@ -247,10 +296,15 @@ export async function getSettings(): Promise<Settings | null> {
 }
 
 export function subscribeSettings(callback: (data: Settings | null) => void) {
+  const cached = getCachedData<Settings>("settings");
+  if (cached) callback(cached);
+
   const docRef = doc(db, "settings", "general");
   return onSnapshot(docRef, (docSnap) => {
     if (docSnap.exists()) {
-      callback(docSnap.data() as Settings);
+      const data = docSnap.data() as Settings;
+      setCachedData("settings", data);
+      callback(data);
     } else {
       callback(null);
     }
@@ -271,10 +325,15 @@ export async function getContactInfo(): Promise<ContactInfo | null> {
 }
 
 export function subscribeContactInfo(callback: (data: ContactInfo | null) => void) {
+  const cached = getCachedData<ContactInfo>("contact");
+  if (cached) callback(cached);
+
   const docRef = doc(db, "contact", "info");
   return onSnapshot(docRef, (docSnap) => {
     if (docSnap.exists()) {
-      callback(docSnap.data() as ContactInfo);
+      const data = docSnap.data() as ContactInfo;
+      setCachedData("contact", data);
+      callback(data);
     } else {
       callback(null);
     }
