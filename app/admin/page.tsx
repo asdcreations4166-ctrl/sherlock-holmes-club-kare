@@ -31,10 +31,16 @@ type LogActionFn = (action: string, targetCol: string, targetId: string) => Prom
 
 const formatTimestamp = (ts: unknown): string => {
   if (!ts) return "";
-  const t = ts as any;
-  if (typeof t.toDate === "function") return t.toDate().toLocaleString();
-  if (typeof t.seconds === "number") return new Date(t.seconds * 1000).toLocaleString();
-  if (t instanceof Date) return t.toLocaleString();
+  if (ts instanceof Date) return ts.toLocaleString();
+  if (typeof ts === "object" && ts !== null) {
+    const t = ts as Record<string, unknown>;
+    if (typeof t.toDate === "function") {
+      return (t.toDate as () => Date)().toLocaleString();
+    }
+    if (typeof t.seconds === "number") {
+      return new Date(t.seconds * 1000).toLocaleString();
+    }
+  }
   return "";
 };
 
