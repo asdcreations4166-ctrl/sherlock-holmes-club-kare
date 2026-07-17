@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const defaultProfile: AdminUser = {
               uid: currentUser.uid,
               email: currentUser.email || "",
-              role: "superadmin",
+              role: "admin",
               displayName: currentUser.displayName || "Administrator",
               createdAt: new Date(),
             };
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAdminProfile({
             uid: currentUser.uid,
             email: currentUser.email || "",
-            role: "superadmin",
+            role: "admin",
             displayName: currentUser.displayName || "Administrator",
             createdAt: new Date(),
           });

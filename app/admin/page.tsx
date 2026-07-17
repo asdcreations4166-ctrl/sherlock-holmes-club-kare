@@ -415,7 +415,13 @@ export default function AdminDashboardPage() {
               <div className="hidden md:flex flex-col text-right">
                 <span className="text-xs font-bold text-foreground">{adminProfile?.displayName || "Admin"}</span>
                 <span className="text-[10px] font-semibold text-primary uppercase tracking-wide">
-                  {adminProfile?.role || "superadmin"}
+                  {adminProfile?.role === "superadmin" || adminProfile?.role === "admin"
+                    ? "Administrator"
+                    : adminProfile?.role === "editor"
+                    ? "Content Editor"
+                    : adminProfile?.role === "mediateam"
+                    ? "Media Team"
+                    : "Administrator"}
                 </span>
               </div>
               <div className="h-9 w-9 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center font-heading text-sm font-bold shrink-0">
@@ -1973,7 +1979,13 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
                   </div>
                   <div className="flex items-center gap-4 shrink-0 font-medium">
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary">
-                      {adm.role}
+                      {adm.role === "admin"
+                        ? "Administrator"
+                        : adm.role === "editor"
+                        ? "Content Editor"
+                        : adm.role === "mediateam"
+                        ? "Media Team"
+                        : adm.role}
                     </span>
                     <div className="flex gap-2">
                       <Button onClick={() => handleEdit(adm)} size="icon" variant="ghost" className="h-8 w-8 text-primary">
