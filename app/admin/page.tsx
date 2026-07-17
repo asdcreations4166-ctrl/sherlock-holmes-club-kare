@@ -209,14 +209,19 @@ export default function AdminDashboardPage() {
 
   // Filter out any activity log entry performed by or targeting a superadmin
   const superadminEmails = new Set(
-    admins.filter((a) => a.role === "superadmin").map((a) => a.email.toLowerCase().trim())
+    admins
+      .filter((a) => (a.role || "").toLowerCase().replace(/\s+/g, "") === "superadmin")
+      .map((a) => a.email.toLowerCase().trim())
   );
   const superadminUids = new Set(
-    admins.filter((a) => a.role === "superadmin").map((a) => a.uid)
+    admins
+      .filter((a) => (a.role || "").toLowerCase().replace(/\s+/g, "") === "superadmin")
+      .map((a) => a.uid)
   );
 
   const filteredLogs = logs.filter((log) => {
-    if (adminProfile?.role === "superadmin") {
+    const userRoleNormalized = (adminProfile?.role || "").toLowerCase().replace(/\s+/g, "");
+    if (userRoleNormalized === "superadmin") {
       return true;
     }
 
@@ -1857,8 +1862,10 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
   const [saving, setSaving] = useState(false);
 
   const visibleAdmins = admins.filter(adm => {
-    if (adm.role === "superadmin") {
-      return adminProfile?.role === "superadmin";
+    const roleNormalized = (adm.role || "").toLowerCase().replace(/\s+/g, "");
+    if (roleNormalized === "superadmin") {
+      const currentRoleNormalized = (adminProfile?.role || "").toLowerCase().replace(/\s+/g, "");
+      return currentRoleNormalized === "superadmin";
     }
     return true;
   });
@@ -1873,11 +1880,13 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
       return;
     }
 
-    const targetRole = editing.role;
+    const targetRoleNormalized = (editing.role || "").toLowerCase().replace(/\s+/g, "");
     const existingAdmin = admins.find(a => a.uid === editing.uid);
-    const isSuperAdminAction = targetRole === "superadmin" || existingAdmin?.role === "superadmin";
+    const existingRoleNormalized = (existingAdmin?.role || "").toLowerCase().replace(/\s+/g, "");
+    const isSuperAdminAction = targetRoleNormalized === "superadmin" || existingRoleNormalized === "superadmin";
+    const currentRoleNormalized = (adminProfile?.role || "").toLowerCase().replace(/\s+/g, "");
 
-    if (isSuperAdminAction && adminProfile?.role !== "superadmin") {
+    if (isSuperAdminAction && currentRoleNormalized !== "superadmin") {
       toast.error("Only Super Admins can assign or edit Super Admin privileges.");
       return;
     }
@@ -1903,7 +1912,10 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
 
   const handleDelete = async (id: string, email: string) => {
     const targetAdmin = admins.find(a => a.uid === id);
-    if (targetAdmin?.role === "superadmin" && adminProfile?.role !== "superadmin") {
+    const targetRoleNormalized = (targetAdmin?.role || "").toLowerCase().replace(/\s+/g, "");
+    const currentRoleNormalized = (adminProfile?.role || "").toLowerCase().replace(/\s+/g, "");
+
+    if (targetRoleNormalized === "superadmin" && currentRoleNormalized !== "superadmin") {
       toast.error("Only Super Admins can revoke Super Admin privileges.");
       return;
     }
