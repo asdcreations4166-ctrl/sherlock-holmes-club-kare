@@ -10,7 +10,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth, db } from "@/firebase/config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { AdminUser } from "@/types";
 
 interface AuthContextType {
@@ -40,13 +40,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setAdminProfile(snap.data() as AdminUser);
           } else {
             // Fallback default admin profile if document does not exist yet
-            setAdminProfile({
+            const defaultProfile: AdminUser = {
               uid: currentUser.uid,
               email: currentUser.email || "",
               role: "superadmin",
               displayName: currentUser.displayName || "Administrator",
               createdAt: new Date(),
-            });
+            };
+            setAdminProfile(defaultProfile);
+            
+            // Auto-bootstrap their document in Firestore so rules accept them as admin
+            try {
+              await setDoc(docRef, {
+                uid: defaultProfile.uid,
+                email: defaultProfile.email,
+                role: defaultProfile.role,
+                displayName: defaultProfile.displayName,
+                createdAt: defaultProfile.createdAt,
+              });
+              console.log("Successfully auto-bootstrapped admin user in database.");
+            } catch (dbErr) {
+              console.error("Auto-bootstrap failed:", dbErr);
+            }
           }
         } catch (err) {
           console.error("Error loading custom admin user document:", err);

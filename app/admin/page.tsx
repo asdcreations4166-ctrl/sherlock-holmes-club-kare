@@ -1835,7 +1835,9 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
       toast.success("Admin roles saved successfully!");
       setEditing(null);
     } catch (err) {
-      toast.error("Failed to sync admin user");
+      console.error("Error saving admin user:", err);
+      const error = err as Error;
+      toast.error(`Failed to sync admin user: ${error.message || error}`);
     } finally {
       setSaving(false);
     }
