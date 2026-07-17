@@ -12,6 +12,13 @@ service cloud.firestore {
         exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid));
     }
 
+    // Helper function to check if the user is a superadmin
+    function isSuperAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/adminUsers/$(request.auth.uid)).data.role == 'superadmin';
+    }
+
     // Public collections - Read-only for everyone, Write-only for admins
     match /settings/{document} {
       allow read: if true;
@@ -62,7 +69,19 @@ service cloud.firestore {
 
     // Admin Users - Read/Write by admins or the admin user themselves
     match /adminUsers/{uid} {
-      allow read, write: if isAuthenticated() && (request.auth.uid == uid || isAdmin());
+      allow read: if isAuthenticated() && (request.auth.uid == uid || isAdmin());
+      allow create: if isAuthenticated() && (
+        request.auth.uid == uid && request.resource.data.role in ['admin', 'editor', 'mediateam']
+      );
+      allow update: if isAuthenticated() && (
+        (request.auth.uid == uid && request.resource.data.role == resource.data.role) || 
+        isSuperAdmin() || 
+        (isAdmin() && resource.data.role != 'superadmin' && request.resource.data.role != 'superadmin')
+      );
+      allow delete: if isAuthenticated() && (
+        isSuperAdmin() || 
+        (isAdmin() && resource.data.role != 'superadmin')
+      );
     }
 
     // Activity Logs - Read/Write by admins only

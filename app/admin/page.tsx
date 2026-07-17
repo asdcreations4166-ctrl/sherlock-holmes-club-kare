@@ -216,6 +216,10 @@ export default function AdminDashboardPage() {
   );
 
   const filteredLogs = logs.filter((log) => {
+    if (adminProfile?.role === "superadmin") {
+      return true;
+    }
+
     const email = (log.adminEmail || "").toLowerCase().trim();
     const actionLower = (log.action || "").toLowerCase();
     
@@ -1848,10 +1852,16 @@ interface AdminUsersTabProps {
   logAction: LogActionFn;
 }
 function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
+  const { adminProfile } = useAuth();
   const [editing, setEditing] = useState<Partial<AdminUser> | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const visibleAdmins = admins.filter(adm => adm.role !== "superadmin");
+  const visibleAdmins = admins.filter(adm => {
+    if (adm.role === "superadmin") {
+      return adminProfile?.role === "superadmin";
+    }
+    return true;
+  });
 
   const handleEdit = (adm: AdminUser) => setEditing(adm);
   const handleCreate = () => setEditing({ uid: "", email: "", displayName: "", role: "editor" });
@@ -1862,6 +1872,16 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
       toast.error("Please supply a valid User Auth ID (UID).");
       return;
     }
+
+    const targetRole = editing.role;
+    const existingAdmin = admins.find(a => a.uid === editing.uid);
+    const isSuperAdminAction = targetRole === "superadmin" || existingAdmin?.role === "superadmin";
+
+    if (isSuperAdminAction && adminProfile?.role !== "superadmin") {
+      toast.error("Only Super Admins can assign or edit Super Admin privileges.");
+      return;
+    }
+
     try {
       setSaving(true);
       const docData = {
@@ -1882,6 +1902,12 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
   };
 
   const handleDelete = async (id: string, email: string) => {
+    const targetAdmin = admins.find(a => a.uid === id);
+    if (targetAdmin?.role === "superadmin" && adminProfile?.role !== "superadmin") {
+      toast.error("Only Super Admins can revoke Super Admin privileges.");
+      return;
+    }
+
     try {
       await deleteDoc(doc(db, "adminUsers", id));
       await logAction(`Deleted Admin User Permissions: ${email}`, "adminUsers", id);
