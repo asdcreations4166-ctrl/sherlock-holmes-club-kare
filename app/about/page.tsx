@@ -66,25 +66,11 @@ export default function AboutPage() {
             subtitle="Learn about the core values of the Sherlock Holmes Club at KARE."
             align="center"
           />
-          {loading ? (
-            <div className="space-y-4 max-w-4xl mx-auto p-8 rounded-3xl border border-border/80 bg-white/40 dark:bg-card/40 backdrop-blur-xs">
-              <Skeleton className="h-5 w-3/4 bg-secondary" />
-              <Skeleton className="h-5 w-full bg-secondary" />
-              <Skeleton className="h-5 w-5/6 bg-secondary" />
-            </div>
-          ) : data?.description ? (
-            <div className="p-8 rounded-3xl border border-border/80 bg-white/40 dark:bg-card/40 backdrop-blur-xs max-w-4xl mx-auto">
-              <p className="font-sans text-sm sm:text-base text-muted-foreground leading-relaxed">
-                {data.description}
-              </p>
-            </div>
-          ) : (
-            <EmptyState
-              title="Club Overview Loading..."
-              description="The official description and campus registration logs are syncing from the database."
-              icon={<Compass className="h-6 w-6 stroke-[1.5]" />}
-            />
-          )}
+          <div className="p-8 rounded-3xl border border-border/80 bg-white/40 dark:bg-card/40 backdrop-blur-xs max-w-4xl mx-auto">
+            <p className="font-sans text-sm sm:text-base text-muted-foreground leading-relaxed">
+              {data?.description || "The Sherlock Holmes Club is a premier student organization at Kalasalingam Academy of Research and Education dedicated to fostering critical thinking, logical inquiry, and analytical problem-solving skills among students through workshops, hackathons, and cryptographic games."}
+            </p>
+          </div>
         </Container>
       </Section>
 
@@ -98,23 +84,9 @@ export default function AboutPage() {
                 <Eye className="h-6 w-6" />
               </div>
               <h3 className="font-heading text-xl font-bold text-foreground mb-4">Club Vision</h3>
-              {loading ? (
-                <div className="w-full space-y-2">
-                  <Skeleton className="h-4 w-5/6 mx-auto bg-secondary" />
-                  <Skeleton className="h-4 w-2/3 mx-auto bg-secondary" />
-                </div>
-              ) : data?.vision ? (
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  {data.vision}
-                </p>
-              ) : (
-                <EmptyState
-                  title="Vision Statement Offline"
-                  description="Vision details will sync from Firebase."
-                  icon={<Eye className="h-4 w-4 stroke-[1.5]" />}
-                  className="py-6 border-0 bg-transparent shadow-none"
-                />
-              )}
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                {data?.vision || "To build a vibrant community of thinkers and problem solvers who apply logical analysis, cryptographic inquiry, and deduction to address complex challenges in engineering, technology, and science."}
+              </p>
             </div>
 
             {/* Mission */}
@@ -123,23 +95,9 @@ export default function AboutPage() {
                 <Target className="h-6 w-6" />
               </div>
               <h3 className="font-heading text-xl font-bold text-foreground mb-4">Club Mission</h3>
-              {loading ? (
-                <div className="w-full space-y-2">
-                  <Skeleton className="h-4 w-5/6 mx-auto bg-secondary" />
-                  <Skeleton className="h-4 w-2/3 mx-auto bg-secondary" />
-                </div>
-              ) : data?.mission ? (
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  {data.mission}
-                </p>
-              ) : (
-                <EmptyState
-                  title="Mission Statement Offline"
-                  description="Mission details will sync from Firebase."
-                  icon={<Target className="h-4 w-4 stroke-[1.5]" />}
-                  className="py-6 border-0 bg-transparent shadow-none"
-                />
-              )}
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                {data?.mission || "To organize cryptography challenges, logic workshops, puzzle solving forums, and technical hackathons that hone analytical ability and reasoning skills among KARE campus students."}
+              </p>
             </div>
           </div>
         </Container>
@@ -153,33 +111,24 @@ export default function AboutPage() {
             subtitle="The strategic aims that guide our workshops and student programs."
             align="center"
           />
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="p-4 rounded-xl border border-border/60 bg-white/30 dark:bg-card/30 flex items-center gap-3">
-                  <Skeleton className="h-4 w-4 rounded-full bg-secondary shrink-0" />
-                  <Skeleton className="h-4 w-5/6 bg-secondary" />
-                </div>
-              ))}
-            </div>
-          ) : data?.objectives && data.objectives.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-              {data.objectives.map((objective, i) => (
-                <div key={i} className="p-5 rounded-2xl border border-border/80 bg-white/40 dark:bg-card/40 hover:border-primary/30 transition-all duration-300 flex items-start gap-3">
-                  <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0 animate-pulse" />
-                  <p className="font-sans text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    {objective}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              title="Strategic Objectives Pending"
-              description="Official guidelines and objectives are loading from the database."
-              icon={<Flag className="h-6 w-6 stroke-[1.5]" />}
-            />
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+            {(data?.objectives && data.objectives.length > 0
+              ? data.objectives
+              : [
+                  "Develop logical deduction and puzzle solving skills.",
+                  "Introduce cryptography, cipher cracking, and logic games.",
+                  "Encourage lateral thinking and innovative problem solving.",
+                  "Organize collaborative campus events and cryptography workshops."
+                ]
+            ).map((objective, i) => (
+              <div key={i} className="p-5 rounded-2xl border border-border/80 bg-white/40 dark:bg-card/40 hover:border-primary/30 transition-all duration-300 flex items-start gap-3">
+                <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0" />
+                <p className="font-sans text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {objective}
+                </p>
+              </div>
+            ))}
+          </div>
         </Container>
       </Section>
 

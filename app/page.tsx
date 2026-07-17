@@ -124,21 +124,12 @@ export default function Home() {
 
             {/* Tagline Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/10 text-xs font-semibold uppercase tracking-wider">
-              {homeLoading ? (
-                <Skeleton className="h-4 w-32 bg-secondary" />
-              ) : (
-                <span>{homeData?.heroTagline || "Sherlock Holmes Club × KARE"}</span>
-              )}
+              <span>{homeData?.heroTagline || "Sherlock Holmes Club × KARE"}</span>
             </div>
 
             {/* Main Premium Heading */}
             <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground max-w-4xl leading-[1.1]">
-              {homeLoading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-12 w-96 mx-auto bg-secondary" />
-                  <Skeleton className="h-12 w-80 mx-auto bg-secondary" />
-                </div>
-              ) : homeData?.heroTitle ? (
+              {homeData?.heroTitle ? (
                 <span>{homeData.heroTitle}</span>
               ) : (
                 <>
@@ -149,16 +140,7 @@ export default function Home() {
 
             {/* Subtext */}
             <div className="font-sans text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mt-2 text-center">
-              {homeLoading ? (
-                <div className="space-y-2 w-full">
-                  <Skeleton className="h-4 w-full bg-secondary" />
-                  <Skeleton className="h-4 w-5/6 mx-auto bg-secondary" />
-                </div>
-              ) : homeData?.heroDescription ? (
-                <span>{homeData.heroDescription}</span>
-              ) : (
-                <span>Kalasalingam Academy of Research and Education&apos;s premier forum for logical inquiry, cryptography, and analytical problem-solving methodologies. Educating minds to see what others only look at.</span>
-              )}
+              <span>{homeData?.heroDescription || "Kalasalingam Academy of Research and Education's premier forum for logical inquiry, cryptography, and analytical problem-solving methodologies. Educating minds to see what others only look at."}</span>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 w-full sm:w-auto px-4 sm:px-0">
@@ -194,18 +176,10 @@ export default function Home() {
             align="center"
           />
           <div className="p-8 rounded-3xl border border-border/80 bg-white/40 dark:bg-card/40 backdrop-blur-xs w-full">
-            {homeLoading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full bg-secondary" />
-                <Skeleton className="h-4 w-full bg-secondary" />
-                <Skeleton className="h-4 w-3/4 mx-auto bg-secondary" />
-              </div>
-            ) : (
-              <p className="font-sans text-xs sm:text-sm sm:text-base text-muted-foreground leading-relaxed">
-                {homeData?.aboutPreview ||
-                  "The Sherlock Holmes Club description will be synced dynamically from our database. The student organization focuses on fostering critical thinking, logical inquiry, and analytical solving skills through campus workshops, academic events, and collaborative reasoning exercises."}
-              </p>
-            )}
+            <p className="font-sans text-xs sm:text-sm sm:text-base text-muted-foreground leading-relaxed">
+              {homeData?.aboutPreview ||
+                "The Sherlock Holmes Club description will be synced dynamically from our database. The student organization focuses on fostering critical thinking, logical inquiry, and analytical solving skills through campus workshops, academic events, and collaborative reasoning exercises."}
+            </p>
             <Button
               render={<Link href="/about">Learn More</Link>}
               nativeButton={false}
@@ -472,54 +446,27 @@ export default function Home() {
             <div className="p-6 rounded-2xl border border-border/80 bg-white/50 dark:bg-card/50 backdrop-blur-xs flex flex-col gap-3 shadow-2xs">
               <MapPin className="h-6 w-6 text-primary" />
               <h4 className="font-heading font-bold text-foreground">Club Office</h4>
-              {contactLoading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-full bg-secondary" />
-                  <Skeleton className="h-4 w-5/6 bg-secondary" />
-                </div>
-              ) : contactInfo?.officeLocation ? (
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {contactInfo.officeLocation}
-                </p>
-              ) : (
-                <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                  Kalasalingam Academy of Research and Education, Anand Nagar, Krishnankoil - 626126, Tamil Nadu, India.
-                </p>
-              )}
+              <p className="font-sans text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {contactInfo?.officeLocation || "Kalasalingam Academy of Research and Education, Anand Nagar, Krishnankoil - 626126, Tamil Nadu, India."}
+              </p>
             </div>
 
             {/* Email */}
             <div className="p-6 rounded-2xl border border-border/80 bg-white/50 dark:bg-card/50 backdrop-blur-xs flex flex-col gap-3 shadow-2xs">
               <Mail className="h-6 w-6 text-primary" />
               <h4 className="font-heading font-bold text-foreground">Email Support</h4>
-              {contactLoading ? (
-                <Skeleton className="h-4 w-2/3 bg-secondary" />
-              ) : contactInfo?.emailAddress ? (
-                <a href={`mailto:${contactInfo.emailAddress}`} className="font-sans text-xs text-muted-foreground hover:text-primary transition-colors">
-                  {contactInfo.emailAddress}
-                </a>
-              ) : (
-                <p className="font-sans text-xs text-muted-foreground">
-                  sherlockholmes@kla.ac.in
-                </p>
-              )}
+              <a href={`mailto:${contactInfo?.emailAddress || "sherlockholmes@kla.ac.in"}`} className="font-sans text-xs text-muted-foreground hover:text-primary transition-colors">
+                {contactInfo?.emailAddress || "sherlockholmes@kla.ac.in"}
+              </a>
             </div>
 
             {/* Phone */}
             <div className="p-6 rounded-2xl border border-border/80 bg-white/50 dark:bg-card/50 backdrop-blur-xs flex flex-col gap-3 shadow-2xs">
               <Phone className="h-6 w-6 text-primary" />
               <h4 className="font-heading font-bold text-foreground">Helpline</h4>
-              {contactLoading ? (
-                <Skeleton className="h-4 w-1/2 bg-secondary" />
-              ) : contactInfo?.phoneHelpline ? (
-                <p className="font-sans text-xs text-muted-foreground">
-                  {contactInfo.phoneHelpline}
-                </p>
-              ) : (
-                <p className="font-sans text-xs text-muted-foreground">
-                  +91 (4563) 289012
-                </p>
-              )}
+              <p className="font-sans text-xs text-muted-foreground">
+                {contactInfo?.phoneHelpline || "+91 (4563) 289012"}
+              </p>
             </div>
           </div>
         </Container>
