@@ -207,6 +207,36 @@ export default function AdminDashboardPage() {
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [admins, setAdmins] = useState<AdminUser[]>([]);
 
+  // Filter out any activity log entry performed by or targeting a superadmin
+  const superadminEmails = new Set(
+    admins.filter((a) => a.role === "superadmin").map((a) => a.email.toLowerCase().trim())
+  );
+  const superadminUids = new Set(
+    admins.filter((a) => a.role === "superadmin").map((a) => a.uid)
+  );
+
+  const filteredLogs = logs.filter((log) => {
+    const email = (log.adminEmail || "").toLowerCase().trim();
+    const actionLower = (log.action || "").toLowerCase();
+    
+    if (superadminEmails.has(email) || superadminUids.has(log.adminUid)) {
+      return false;
+    }
+    
+    if (Array.from(superadminEmails).some(se => actionLower.includes(se))) {
+      return false;
+    }
+    if (Array.from(superadminUids).some(su => log.targetId === su || actionLower.includes(su))) {
+      return false;
+    }
+    
+    if (actionLower.includes("superadmin")) {
+      return false;
+    }
+    
+    return true;
+  });
+
   // ==========================================
   // Real-Time Subscriptions for Lists
   // ==========================================
@@ -402,7 +432,7 @@ export default function AdminDashboardPage() {
                 announcements={announcements}
                 team={team}
                 gallery={gallery}
-                logs={logs}
+                logs={filteredLogs}
               />
             )}
             {activeTab === "homepage" && <HomepageTab logAction={logAction} />}
@@ -419,7 +449,7 @@ export default function AdminDashboardPage() {
             {activeTab === "contact" && <ContactTab logAction={logAction} />}
             {activeTab === "settings" && <SettingsTab logAction={logAction} />}
             {activeTab === "adminUsers" && <AdminUsersTab admins={admins} logAction={logAction} />}
-            {activeTab === "activityLogs" && <ActivityLogsTab logs={logs} />}
+            {activeTab === "activityLogs" && <ActivityLogsTab logs={filteredLogs} />}
           </main>
         </div>
       </div>
