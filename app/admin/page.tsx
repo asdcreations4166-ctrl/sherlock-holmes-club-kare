@@ -1815,6 +1815,8 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
   const [editing, setEditing] = useState<Partial<AdminUser> | null>(null);
   const [saving, setSaving] = useState(false);
 
+  const visibleAdmins = admins.filter(adm => adm.role !== "superadmin");
+
   const handleEdit = (adm: AdminUser) => setEditing(adm);
   const handleCreate = () => setEditing({ uid: "", email: "", displayName: "", role: "editor" });
 
@@ -1860,7 +1862,7 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-xl font-bold text-slate-800">Admin Roster CMS</h1>
-          <p className="text-xs text-slate-500">Configure administrative access roles (Super Admin, Coordinator, Media Team).</p>
+          <p className="text-xs text-slate-500">Configure administrative access roles (Coordinator, Media Team).</p>
         </div>
         {!editing && (
           <Button onClick={handleCreate} className="bg-primary text-white rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
@@ -1910,7 +1912,6 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
                 onChange={(e) => setEditing({ ...editing, role: e.target.value as AdminUser["role"] })}
                 className="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium bg-white"
               >
-                <option value="superadmin">Super Admin</option>
                 <option value="admin">Administrator</option>
                 <option value="editor">Content Editor</option>
                 <option value="mediateam">Media Team</option>
@@ -1930,11 +1931,11 @@ function AdminUsersTab({ admins, logAction }: AdminUsersTabProps) {
         </Card>
       ) : (
         <div className="space-y-4">
-          {admins.length === 0 ? (
+          {visibleAdmins.length === 0 ? (
             <EmptyState title="No Admins Assigned" description="Use the button above to assign admin privileges." icon={<UserCheck className="h-6 w-6 stroke-[1.5]" />} />
           ) : (
             <div className="space-y-3">
-              {admins.map((adm) => (
+              {visibleAdmins.map((adm) => (
                 <div key={adm.uid} className="p-5 rounded-2xl border border-slate-200 bg-white flex justify-between items-center gap-4">
                   <div className="space-y-1">
                     <h3 className="font-heading font-bold text-sm text-slate-800">{adm.displayName}</h3>
