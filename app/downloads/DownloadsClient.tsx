@@ -19,7 +19,7 @@ interface DownloadItem {
   fileUrl: string;
   fileType: string;
   fileSize?: string;
-  createdAt: any;
+  createdAt?: unknown;
 }
 
 export default function DownloadsClient() {
