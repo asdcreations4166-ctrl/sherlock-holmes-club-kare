@@ -1,11 +1,30 @@
-"use client";
-
 import React from "react";
+import type { Metadata } from "next";
 import PageBanner from "@/components/common/PageBanner";
 import Section from "@/components/common/Section";
 import Container from "@/components/common/Container";
 import { Card } from "@/components/ui/card";
 import { Mail, ShieldCheck, Code } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Website Developer Team | Sherlock Holmes Club KARE",
+  description:
+    "Meet the official design & development team of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Developed by ASD Creations.",
+  keywords: [
+    "ASD Creations",
+    "Web Developer",
+    "Sherlock Holmes Club Developers",
+    "KARE Club Portal Developers",
+    "ASD Creations 4166",
+    "Website Designers KARE",
+  ],
+  openGraph: {
+    title: "Website Developer Team | Sherlock Holmes Club KARE",
+    description:
+      "Meet the official design & development team of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Developed by ASD Creations.",
+    type: "website",
+  },
+};
 
 export default function DeveloperTeamPage() {
   return (
