@@ -88,6 +88,7 @@ export interface ContactInfo {
     linkedin?: string;
     twitter?: string;
     website?: string;
+    instagram?: string;
   };
 }
 

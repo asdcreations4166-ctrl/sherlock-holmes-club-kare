@@ -72,7 +72,8 @@ async function seed() {
       phoneHelpline: "+91 4563 289012",
       socials: {
         linkedin: "#",
-        github: "#"
+        github: "#",
+        instagram: "https://www.instagram.com/sherlockholmesclub.kare?igsh=N2lrYXJpMjFjZzY="
       }
     });
     console.log("✔ Contact info collection seeded!");

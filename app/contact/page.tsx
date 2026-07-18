@@ -137,6 +137,11 @@ export default function ContactPage() {
                               LinkedIn
                             </a>
                           )}
+                          {info.socials.instagram && (
+                            <a href={info.socials.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors underline">
+                              Instagram
+                            </a>
+                          )}
                           {info.socials.github && (
                             <a href={info.socials.github} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors underline">
                               GitHub

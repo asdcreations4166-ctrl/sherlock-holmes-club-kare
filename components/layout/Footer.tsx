@@ -85,13 +85,17 @@ export default function Footer() {
             <div className="flex space-x-3.5 mb-4">
               <a
                 href="#"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-lg p-2 bg-secondary text-muted-foreground hover:text-primary hover:bg-secondary-foreground/10 transition-all"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/sherlockholmesclub.kare?igsh=N2lrYXJpMjFjZzY="
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-lg p-2 bg-secondary text-muted-foreground hover:text-primary hover:bg-secondary-foreground/10 transition-all"
                 aria-label="Instagram"
               >
