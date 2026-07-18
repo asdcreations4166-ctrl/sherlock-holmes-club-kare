@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { label: "Gallery", href: "/gallery" },
   { label: "Team", href: "/team" },
   { label: "Announcements", href: "/announcements" },
+  { label: "Downloads", href: "/downloads" },
   { label: "Contact", href: "/contact" },
 ];
 
