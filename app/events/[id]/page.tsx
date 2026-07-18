@@ -2,6 +2,8 @@ import EventDetailsClient from "./EventDetailsClient";
 import type { Metadata } from "next";
 import { getEventById } from "@/services/clubService";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

@@ -9,7 +9,7 @@ import EmptyState from "@/components/common/EmptyState";
 import { SearchBar } from "@/components/common/SearchAndFilter";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Download, FileText, ExternalLink, Calendar, Search } from "lucide-react";
+import { Download, FileText, ExternalLink, Calendar } from "lucide-react";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "@/firebase/config";
 
