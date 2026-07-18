@@ -92,7 +92,9 @@ export default function ContactPage() {
                     ) : (
                       <div>
                         <p className="font-bold text-foreground">Email Address</p>
-                        <p>sherlockholmes@kla.ac.in</p>
+                        <a href="mailto:sherlockholmesclubkare@klu.ac.in" className="hover:text-primary transition-colors">
+                          sherlockholmesclubkare@klu.ac.in
+                        </a>
                       </div>
                     )}
                   </div>
@@ -114,7 +116,9 @@ export default function ContactPage() {
                     ) : (
                       <div>
                         <p className="font-bold text-foreground">Phone Helpline</p>
-                        <p>+91 (4563) 289012</p>
+                        <a href="tel:+916379128215" className="hover:text-primary transition-colors">
+                          +91 63791 28215
+                        </a>
                       </div>
                     )}
                   </div>

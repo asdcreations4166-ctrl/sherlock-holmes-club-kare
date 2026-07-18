@@ -68,11 +68,15 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-2 text-xs text-muted-foreground">
                 <Mail className="h-3.5 w-3.5 text-primary/70 shrink-0" />
-                <span>sherlockholmes@kla.ac.in</span>
+                <a href="mailto:sherlockholmesclubkare@klu.ac.in" className="hover:text-primary transition-colors">
+                  sherlockholmesclubkare@klu.ac.in
+                </a>
               </li>
               <li className="flex items-center space-x-2 text-xs text-muted-foreground">
                 <Phone className="h-3.5 w-3.5 text-primary/70 shrink-0" />
-                <span>+91 4563 289012</span>
+                <a href="tel:+916379128215" className="hover:text-primary transition-colors">
+                  +91 63791 28215
+                </a>
               </li>
             </ul>
           </div>

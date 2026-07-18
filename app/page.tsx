@@ -455,8 +455,8 @@ export default function Home() {
             <div className="p-6 rounded-2xl border border-border/80 bg-white/50 dark:bg-card/50 backdrop-blur-xs flex flex-col gap-3 shadow-2xs">
               <Mail className="h-6 w-6 text-primary" />
               <h4 className="font-heading font-bold text-foreground">Email Support</h4>
-              <a href={`mailto:${contactInfo?.emailAddress || "sherlockholmes@kla.ac.in"}`} className="font-sans text-xs text-muted-foreground hover:text-primary transition-colors">
-                {contactInfo?.emailAddress || "sherlockholmes@kla.ac.in"}
+              <a href={`mailto:${contactInfo?.emailAddress || "sherlockholmesclubkare@klu.ac.in"}`} className="font-sans text-xs text-muted-foreground hover:text-primary transition-colors">
+                {contactInfo?.emailAddress || "sherlockholmesclubkare@klu.ac.in"}
               </a>
             </div>
 
@@ -464,9 +464,9 @@ export default function Home() {
             <div className="p-6 rounded-2xl border border-border/80 bg-white/50 dark:bg-card/50 backdrop-blur-xs flex flex-col gap-3 shadow-2xs">
               <Phone className="h-6 w-6 text-primary" />
               <h4 className="font-heading font-bold text-foreground">Helpline</h4>
-              <p className="font-sans text-xs text-muted-foreground">
-                {contactInfo?.phoneHelpline || "+91 (4563) 289012"}
-              </p>
+              <a href={`tel:${contactInfo?.phoneHelpline || "+916379128215"}`} className="font-sans text-xs text-muted-foreground hover:text-primary transition-colors">
+                {contactInfo?.phoneHelpline || "+91 63791 28215"}
+              </a>
             </div>
           </div>
         </Container>

@@ -68,8 +68,8 @@ async function seed() {
     // 4. Contact
     await setDoc(doc(db, "contact", "info"), {
       officeLocation: "KARE Campus, Anand Nagar, Krishnankoil",
-      emailAddress: "sherlockholmes@kla.ac.in",
-      phoneHelpline: "+91 4563 289012",
+      emailAddress: "sherlockholmesclubkare@klu.ac.in",
+      phoneHelpline: "+91 63791 28215",
       socials: {
         linkedin: "#",
         github: "#",
