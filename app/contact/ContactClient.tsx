@@ -8,7 +8,7 @@ import Heading from "@/components/common/Heading";
 import ContactForm from "@/components/common/ContactForm";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Mail, Phone, Share2, Map } from "lucide-react";
+import { MapPin, Mail, Phone, Share2 } from "lucide-react";
 import { subscribeContactInfo } from "@/services/clubService";
 import { ContactInfo } from "@/types";
 
@@ -168,15 +168,18 @@ export default function ContactClient() {
                 </div>
               </Card>
 
-              {/* Google Map Placeholder */}
-              <div className="aspect-video w-full bg-secondary/35 rounded-3xl border border-border/80 flex flex-col items-center justify-center gap-2 relative overflow-hidden shadow-xs">
-                <Map className="h-10 w-10 text-muted-foreground stroke-[1.5]" />
-                <span className="font-heading text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                  Campus Map Placeholder
-                </span>
-                <span className="font-sans text-[10px] text-muted-foreground">
-                  Google Map iframe coordinates will be linked.
-                </span>
+              {/* Google Map */}
+              <div className="aspect-video w-full rounded-3xl border border-border/80 overflow-hidden shadow-xs">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3934.23841811635!2d77.6798137!3d9.574705200000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b06dbc06968e9eb%3A0x6cfd8f94e42f98c4!2sKalasalingam%20Academy%20of%20Research%20and%20Education!5e0!3m2!1sen!2sin!4v1784442755901!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Kalasalingam Academy of Research and Education Map"
+                />
               </div>
             </div>
 
