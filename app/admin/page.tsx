@@ -102,8 +102,9 @@ import {
   Eye,
   AlertTriangle,
   Upload,
+  MessageSquare,
 } from "lucide-react";
-import { HomepageData, AboutData, Event as ClubEvent, Announcement, TeamMember, GalleryItem, ContactInfo, Settings, AdminUser, ActivityLog } from "@/types";
+import { HomepageData, AboutData, Event as ClubEvent, Announcement, TeamMember, GalleryItem, ContactInfo, Settings, AdminUser, ActivityLog, ContactMessage } from "@/types";
 
 // ==========================================
 // 1. Role Module Permission Helper
@@ -118,6 +119,7 @@ type ModuleName =
   | "gallery"
   | "downloads"
   | "contact"
+  | "enquiries"
   | "settings"
   | "adminUsers"
   | "activityLogs";
@@ -127,12 +129,12 @@ function hasPermission(role: string, module: ModuleName): boolean {
   if (normalized === "superadmin" || normalized === "admin") return true;
   if (normalized === "mediateam") return ["dashboard", "gallery"].includes(module);
   if (normalized === "contenteditor") return ["dashboard", "homepage", "about", "announcements"].includes(module);
-  if (normalized === "president") return ["dashboard", "events", "team", "homepage"].includes(module);
+  if (normalized === "president") return ["dashboard", "events", "team", "homepage", "enquiries"].includes(module);
   if (normalized === "facultycoordinator" || normalized === "studentcoordinator") {
-    return ["dashboard", "events", "announcements", "team", "downloads"].includes(module);
+    return ["dashboard", "events", "announcements", "team", "downloads", "enquiries"].includes(module);
   }
   if (normalized === "vicepresident" || normalized === "secretary") {
-    return ["dashboard", "events", "announcements", "team", "gallery", "contact"].includes(module);
+    return ["dashboard", "events", "announcements", "team", "gallery", "contact", "enquiries"].includes(module);
   }
   return ["dashboard"].includes(module);
 }
@@ -206,6 +208,7 @@ export default function AdminDashboardPage() {
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [enquiries, setEnquiries] = useState<ContactMessage[]>([]);
 
   // Filter out any activity log entry performed by or targeting a superadmin
   const superadminEmails = new Set(
@@ -288,6 +291,12 @@ export default function AdminDashboardPage() {
       setAdmins(items);
     });
 
+    const unsubEnquiries = onSnapshot(query(collection(db, "contactMessages"), orderBy("timestamp", "desc")), (snap) => {
+      const items: ContactMessage[] = [];
+      snap.forEach((d) => items.push({ id: d.id, ...d.data() } as ContactMessage));
+      setEnquiries(items);
+    });
+
     return () => {
       unsubEvents();
       unsubAnnouncements();
@@ -295,6 +304,7 @@ export default function AdminDashboardPage() {
       unsubGallery();
       unsubLogs();
       unsubAdmins();
+      unsubEnquiries();
     };
   }, [user]);
 
@@ -330,6 +340,7 @@ export default function AdminDashboardPage() {
     { id: "gallery" as ModuleName, label: "Gallery", icon: <Camera className="h-4 w-4" /> },
     { id: "downloads" as ModuleName, label: "Downloads", icon: <Download className="h-4 w-4" /> },
     { id: "contact" as ModuleName, label: "Contact Info", icon: <Mail className="h-4 w-4" /> },
+    { id: "enquiries" as ModuleName, label: "Enquiry Messages", icon: <MessageSquare className="h-4 w-4" /> },
     { id: "settings" as ModuleName, label: "Settings", icon: <SettingsIcon className="h-4 w-4" /> },
     { id: "adminUsers" as ModuleName, label: "Admin Users", icon: <UserCheck className="h-4 w-4" /> },
     { id: "activityLogs" as ModuleName, label: "Activity Logs", icon: <History className="h-4 w-4" /> },
@@ -462,6 +473,9 @@ export default function AdminDashboardPage() {
             {activeTab === "gallery" && <GalleryTab gallery={gallery} logAction={logAction} />}
             {activeTab === "downloads" && <DownloadsTab logAction={logAction} />}
             {activeTab === "contact" && <ContactTab logAction={logAction} />}
+            {activeTab === "enquiries" && (
+              <EnquiriesTab enquiries={enquiries} logAction={logAction} search={globalSearch} />
+            )}
             {activeTab === "settings" && <SettingsTab logAction={logAction} />}
             {activeTab === "adminUsers" && <AdminUsersTab admins={admins} logAction={logAction} />}
             {activeTab === "activityLogs" && <ActivityLogsTab logs={filteredLogs} />}
@@ -1741,6 +1755,159 @@ function ContactTab({ logAction }: { logAction: LogActionFn }) {
           </Button>
         </form>
       </Card>
+    </div>
+  );
+}
+
+// ============================================================================
+// TAB: ENQUIRY MESSAGES
+// ============================================================================
+interface EnquiriesTabProps {
+  enquiries: ContactMessage[];
+  logAction: LogActionFn;
+  search: string;
+}
+function EnquiriesTab({ enquiries, logAction, search }: EnquiriesTabProps) {
+  const [selected, setSelected] = useState<ContactMessage | null>(null);
+
+  const filtered = enquiries.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase()) ||
+    item.email.toLowerCase().includes(search.toLowerCase()) ||
+    item.subject.toLowerCase().includes(search.toLowerCase()) ||
+    item.message.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete the enquiry from ${name}?`)) return;
+    try {
+      await deleteDoc(doc(db, "contactMessages", id));
+      await logAction(`Deleted Enquiry Message from: ${name}`, "contactMessages", id);
+      toast.success("Enquiry message deleted successfully!");
+      if (selected?.id === id) {
+        setSelected(null);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete enquiry message");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-1">
+        <h1 className="font-heading text-xl font-bold text-slate-800">Enquiry Messages</h1>
+        <p className="text-xs text-slate-500">View and manage message enquiries submitted by visitors via the Contact page.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Messages List */}
+        <div className={`space-y-3 ${selected ? "lg:col-span-6" : "lg:col-span-12"}`}>
+          {filtered.length === 0 ? (
+            <EmptyState
+              title="No enquiry messages found"
+              description="No messages have been submitted or match your search."
+              icon={<Mail className="h-6 w-6 stroke-[1.5]" />}
+            />
+          ) : (
+            <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
+              {filtered.map((item) => (
+                <Card
+                  key={item.id}
+                  onClick={() => setSelected(item)}
+                  className={`p-4 border cursor-pointer transition-all rounded-2xl flex justify-between items-start gap-4 ${
+                    selected?.id === item.id
+                      ? "border-primary bg-primary/5 shadow-xs"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-800 text-xs truncate">{item.name}</span>
+                      <span className="text-[10px] text-slate-400 truncate">({item.email})</span>
+                    </div>
+                    <p className="font-semibold text-slate-700 text-xs truncate">{item.subject}</p>
+                    <p className="text-slate-400 text-[10px] line-clamp-2 leading-relaxed">{item.message}</p>
+                  </div>
+                  <div className="flex flex-col items-end shrink-0 gap-2">
+                    <span className="text-[9px] text-slate-400 font-medium font-sans">
+                      {formatTimestamp(item.timestamp)}
+                    </span>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item.id, item.name);
+                      }}
+                      className="text-rose-500 hover:bg-rose-50 hover:text-rose-600 h-6 w-6 rounded-lg"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Message Details */}
+        {selected && (
+          <Card className="lg:col-span-6 p-6 border border-slate-200 bg-white rounded-3xl space-y-4 shadow-sm sticky top-24">
+            <div className="flex justify-between items-start border-b border-slate-100 pb-4">
+              <div>
+                <h3 className="font-heading text-base font-bold text-slate-800">{selected.name}</h3>
+                <a href={`mailto:${selected.email}`} className="text-xs text-primary font-medium hover:underline">
+                  {selected.email}
+                </a>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 block font-sans">{formatTimestamp(selected.timestamp)}</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setSelected(null)}
+                  className="text-slate-400 hover:text-slate-600 text-[10px] mt-1 h-6 px-2 rounded-lg"
+                >
+                  Close Details
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3.5">
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Subject</span>
+                <p className="text-xs font-bold text-slate-800 leading-normal">{selected.subject}</p>
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Message Details</span>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-700 leading-relaxed whitespace-pre-wrap font-sans">
+                  {selected.message}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+              <a
+                href={`mailto:${selected.email}?subject=Re: ${selected.subject}`}
+                className="bg-primary hover:bg-primary/95 text-white rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span>Reply via Email</span>
+              </a>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleDelete(selected.id, selected.name)}
+                className="border-slate-200 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider"
+              >
+                Delete Message
+              </Button>
+            </div>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
