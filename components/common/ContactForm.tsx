@@ -14,6 +14,7 @@ import { submitContactMessage } from "@/services/clubService";
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
+  phone: z.string().min(10, "Phone number must be at least 10 digits.").max(15, "Phone number must not exceed 15 digits.").regex(/^[0-9+\s-]+$/, "Please enter a valid phone number."),
   subject: z.string().min(3, "Subject must be at least 3 characters."),
   message: z.string().min(10, "Message must be at least 10 characters."),
 });
@@ -31,6 +32,7 @@ export default function ContactForm() {
     defaultValues: {
       name: "",
       email: "",
+      phone: "",
       subject: "",
       message: "",
     },
@@ -86,21 +88,41 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Subject */}
-      <div className="space-y-1.5">
-        <label htmlFor="subject" className="text-xs font-semibold text-foreground uppercase tracking-wider">
-          Subject
-        </label>
-        <Input
-          id="subject"
-          placeholder="Inquiry about upcoming events..."
-          disabled={isSubmitting}
-          className="rounded-xl border-border bg-white dark:bg-background text-foreground focus:ring-primary focus:border-primary"
-          {...register("subject")}
-        />
-        {errors.subject && (
-          <p className="text-xs text-destructive font-medium">{errors.subject.message}</p>
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Mobile Number */}
+        <div className="space-y-1.5">
+          <label htmlFor="phone" className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            Mobile Number
+          </label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="+91 98765 43210"
+            disabled={isSubmitting}
+            className="rounded-xl border-border bg-white dark:bg-background text-foreground focus:ring-primary focus:border-primary"
+            {...register("phone")}
+          />
+          {errors.phone && (
+            <p className="text-xs text-destructive font-medium">{errors.phone.message}</p>
+          )}
+        </div>
+
+        {/* Subject */}
+        <div className="space-y-1.5">
+          <label htmlFor="subject" className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            Subject
+          </label>
+          <Input
+            id="subject"
+            placeholder="Inquiry about upcoming events..."
+            disabled={isSubmitting}
+            className="rounded-xl border-border bg-white dark:bg-background text-foreground focus:ring-primary focus:border-primary"
+            {...register("subject")}
+          />
+          {errors.subject && (
+            <p className="text-xs text-destructive font-medium">{errors.subject.message}</p>
+          )}
+        </div>
       </div>
 
       {/* Message */}

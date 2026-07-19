@@ -1773,6 +1773,7 @@ function EnquiriesTab({ enquiries, logAction, search }: EnquiriesTabProps) {
   const filtered = enquiries.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()) ||
     item.email.toLowerCase().includes(search.toLowerCase()) ||
+    (item.phone && item.phone.toLowerCase().includes(search.toLowerCase())) ||
     item.subject.toLowerCase().includes(search.toLowerCase()) ||
     item.message.toLowerCase().includes(search.toLowerCase())
   );
@@ -1821,9 +1822,10 @@ function EnquiriesTab({ enquiries, logAction, search }: EnquiriesTabProps) {
                   }`}
                 >
                   <div className="space-y-1 min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-slate-800 text-xs truncate">{item.name}</span>
                       <span className="text-[10px] text-slate-400 truncate">({item.email})</span>
+                      {item.phone && <span className="text-[10px] text-slate-500 truncate">({item.phone})</span>}
                     </div>
                     <p className="font-semibold text-slate-700 text-xs truncate">{item.subject}</p>
                     <p className="text-slate-400 text-[10px] line-clamp-2 leading-relaxed">{item.message}</p>
@@ -1857,9 +1859,16 @@ function EnquiriesTab({ enquiries, logAction, search }: EnquiriesTabProps) {
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div>
                 <h3 className="font-heading text-base font-bold text-slate-800">{selected.name}</h3>
-                <a href={`mailto:${selected.email}`} className="text-xs text-primary font-medium hover:underline">
-                  {selected.email}
-                </a>
+                <div className="flex flex-col gap-0.5 mt-1">
+                  <a href={`mailto:${selected.email}`} className="text-xs text-primary font-medium hover:underline">
+                    {selected.email}
+                  </a>
+                  {selected.phone && (
+                    <a href={`tel:${selected.phone}`} className="text-xs text-slate-500 font-medium hover:underline">
+                      {selected.phone}
+                    </a>
+                  )}
+                </div>
               </div>
               <div className="text-right">
                 <span className="text-[10px] text-slate-400 block font-sans">{formatTimestamp(selected.timestamp)}</span>
