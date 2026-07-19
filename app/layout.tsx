@@ -22,9 +22,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sherlockholmesclub.kare.edu.in"),
   title: "Sherlock Holmes Club | Kalasalingam Academy of Research and Education",
   description:
-    "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Promoting logical analysis, mystery-solving, and critical thinking.",
+    "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Developed by ASD Creations.",
   keywords: [
     "Sherlock Holmes Club",
     "Kalasalingam Academy",
@@ -35,20 +36,38 @@ export const metadata: Metadata = {
     "Cryptography",
   ],
   authors: [{ name: "Sherlock Holmes Club KARE" }],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", type: "image/png", sizes: "180x180" },
+    ],
+  },
   openGraph: {
     title: "Sherlock Holmes Club | KARE",
     description:
-      "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Promoting logical analysis, mystery-solving, and critical thinking.",
+      "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Developed by ASD Creations.",
     url: "https://sherlockholmesclub.kare.edu.in",
     siteName: "Sherlock Holmes Club × KARE",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Sherlock Holmes Club KARE Social Share Image",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sherlock Holmes Club | KARE",
     description:
-      "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Promoting logical analysis, mystery-solving, and critical thinking.",
+      "Official website of the Sherlock Holmes Club at Kalasalingam Academy of Research and Education (KARE). Developed by ASD Creations.",
+    images: ["/opengraph-image.png"],
   },
   verification: {
     google: "_G57zdnkUO6xIcp09cxzGsY7YA1n26FnMmjTqpGQ25A",
